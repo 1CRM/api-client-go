@@ -147,6 +147,10 @@ func (c *Client) Post(endpoint string, options ...RequestOption) (*Response, err
 	return c.Request("POST", endpoint, options...)
 }
 
+func (c *Client) Patch(endpoint string, options ...RequestOption) (*Response, error) {
+	return c.Request("PATCH", endpoint, options...)
+}
+
 func (c *Client) Put(endpoint string, options ...RequestOption) (*Response, error) {
 	return c.Request("PUT", endpoint, options...)
 }
