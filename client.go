@@ -29,7 +29,7 @@ type requestOptions struct {
 type RequestOption func(*requestOptions) error
 
 // NewClient returns a new API Client
-func NewClient(url string, auth Auth, ctx context.Context) *Client {
+func NewClient(ctx context.Context, url string, auth Auth) *Client {
 	if ctx == nil {
 		ctx = context.Background()
 	}
