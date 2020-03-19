@@ -144,7 +144,7 @@ func (flow *AuthFlow) InitAuthCode() (string, error) {
 }
 
 // FinalizeAuthCode completes the Authorization Code flow and returns an access token
-func (flow *AuthFlow) FinalizeAuthCode(code string, ctx context.Context) (*OAuth2AccessToken, error) {
+func (flow *AuthFlow) FinalizeAuthCode(ctx context.Context, code string) (*OAuth2AccessToken, error) {
 	body := AuthCodeRequest{
 		GrantType:    "authorization_code",
 		ClientID:     flow.clientID,
