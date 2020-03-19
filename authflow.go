@@ -26,7 +26,7 @@ type AuthFlowOption func(*AuthFlow)
 type ResourceOwnerRequest struct {
 	GrantType    string `json:"grant_type"`
 	ClientID     string `json:"client_id"`
-	Scope        string `json:"scope`
+	Scope        string `json:"scope"`
 	ClientSecret string `json:"client_secret"`
 	Username     string `json:"username"`
 	Password     string `json:"password"`
@@ -36,7 +36,7 @@ type ResourceOwnerRequest struct {
 type ClientCredentialsRequest struct {
 	GrantType    string `json:"grant_type"`
 	ClientID     string `json:"client_id"`
-	Scope        string `json:"scope`
+	Scope        string `json:"scope"`
 	ClientSecret string `json:"client_secret"`
 }
 
@@ -44,7 +44,7 @@ type ClientCredentialsRequest struct {
 type AuthCodeRequest struct {
 	GrantType    string `json:"grant_type"`
 	ClientID     string `json:"client_id"`
-	Scope        string `json:"scope`
+	Scope        string `json:"scope"`
 	ClientSecret string `json:"client_secret"`
 	Code         string `json:"code"`
 	RedirectURI  string `json:"redirect_uri"`
