@@ -83,8 +83,8 @@ func WithQueryValue(key, value string, append bool) RequestOption {
 	}
 }
 
-// WithJsonBody is a RequestOption that sets the request's body to a JSON string
-func WithJsonBody(content interface{}) RequestOption {
+// WithJSONBody is a RequestOption that sets the request's body to a JSON string
+func WithJSONBody(content interface{}) RequestOption {
 	return func(opts *requestOptions) error {
 		b, err := json.Marshal(content)
 		if err != nil {

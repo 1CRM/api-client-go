@@ -156,7 +156,7 @@ func (flow *AuthFlow) FinalizeAuthCode(ctx context.Context, code string) (*OAuth
 	c := NewClient(ctx, flow.url, nil)
 	res, err := c.Post(
 		"auth/"+flow.ownerType+"/access_token",
-		WithJsonBody(body),
+		WithJSONBody(body),
 	)
 	if err != nil {
 		return nil, err
@@ -181,7 +181,7 @@ func (flow *AuthFlow) InitResourceOwner(ctx context.Context) (*OAuth2AccessToken
 	c := NewClient(ctx, flow.url, nil)
 	res, err := c.Post(
 		"auth/"+flow.ownerType+"/access_token",
-		WithJsonBody(body),
+		WithJSONBody(body),
 	)
 	if err != nil {
 		return nil, err
@@ -204,7 +204,7 @@ func (flow *AuthFlow) InitClientCredentials(ctx context.Context) (*OAuth2AccessT
 	c := NewClient(ctx, flow.url, nil)
 	res, err := c.Post(
 		"auth/"+flow.ownerType+"/access_token",
-		WithJsonBody(body),
+		WithJSONBody(body),
 	)
 	if err != nil {
 		return nil, err
