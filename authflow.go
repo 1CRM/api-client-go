@@ -32,6 +32,7 @@ type ResourceOwnerRequest struct {
 	Password     string `json:"password"`
 }
 
+// revive:disable:exported
 // ClientCredentialsRequest is used to initiate Client Credentials flow
 type ClientCredentialsRequest struct {
 	GrantType    string `json:"grant_type"`
@@ -39,6 +40,8 @@ type ClientCredentialsRequest struct {
 	Scope        string `json:"scope"`
 	ClientSecret string `json:"client_secret"`
 }
+
+// revive:enable:exported
 
 // AuthCodeRequest is used to initiate Authorization Code flow
 type AuthCodeRequest struct {
