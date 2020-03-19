@@ -147,7 +147,7 @@ func (c *Client) Request(method string, endpoint string, options ...RequestOptio
 		}
 		return nil, &resError{code: res.StatusCode, err: string(b)}
 	}
-	return &Response{HttpResponse: res}, nil
+	return &Response{HTTPResponse: res}, nil
 }
 
 // Get is convenience wrapper around Request() to send a GET request

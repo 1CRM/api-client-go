@@ -8,11 +8,11 @@ import (
 
 // Response is a response returned from requests to the API
 type Response struct {
-	HttpResponse *http.Response
+	HTTPResponse *http.Response
 }
 
 func (res *Response) String() (string, error) {
-	body := res.HttpResponse.Body
+	body := res.HTTPResponse.Body
 	defer body.Close()
 	b, err := ioutil.ReadAll(body)
 	if err != nil {
@@ -23,7 +23,7 @@ func (res *Response) String() (string, error) {
 
 // ParseJSON parses response body into supplied argument
 func (res *Response) ParseJSON(out interface{}) error {
-	body := res.HttpResponse.Body
+	body := res.HTTPResponse.Body
 	defer body.Close()
 	b, err := ioutil.ReadAll(body)
 	if err != nil {
