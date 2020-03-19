@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -13,20 +14,26 @@ import (
 type Client struct {
 	auth Auth
 	url  string
+	ctx  context.Context
 }
 
 type requestOptions struct {
 	body        io.Reader
 	query       url.Values
 	contentType string
+	ctx         context.Context
 }
 
 type RequestOption func(*requestOptions) error
 
-func NewClient(url string, auth Auth) *Client {
+func NewClient(url string, auth Auth, ctx context.Context) *Client {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 	return &Client{
 		url:  strings.TrimRight(url, "/"),
 		auth: auth,
+		ctx:  ctx,
 	}
 }
 
@@ -82,9 +89,17 @@ func WithJsonBody(content interface{}) RequestOption {
 	}
 }
 
+func WitchContext(ctx context.Context) RequestOption {
+	return func(opts *requestOptions) error {
+		opts.ctx = ctx
+		return nil
+	}
+}
+
 func (c *Client) Request(method string, endpoint string, options ...RequestOption) (*Response, error) {
 	opts := requestOptions{
 		contentType: "application/json",
+		ctx:         c.ctx,
 	}
 	for _, opt := range options {
 		if err := opt(&opts); err != nil {

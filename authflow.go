@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"net/url"
 	"os"
 )
@@ -140,7 +141,7 @@ func (flow *AuthFlow) InitAuthCode() (string, error) {
 }
 
 // FinalizeAuthCode completes the Authorization Code flow and returns an access token
-func (flow *AuthFlow) FinalizeAuthCode(code string) (*OAuth2AccessToken, error) {
+func (flow *AuthFlow) FinalizeAuthCode(code string, ctx context.Context) (*OAuth2AccessToken, error) {
 	body := AuthCodeRequest{
 		GrantType:    "authorization_code",
 		ClientID:     flow.clientID,
@@ -149,7 +150,7 @@ func (flow *AuthFlow) FinalizeAuthCode(code string) (*OAuth2AccessToken, error) 
 		RedirectURI:  flow.redirectURI,
 		Code:         code,
 	}
-	c := NewClient(flow.url, nil)
+	c := NewClient(flow.url, nil, ctx)
 	res, err := c.Post(
 		"auth/"+flow.ownerType+"/access_token",
 		WithJsonBody(body),
@@ -165,7 +166,7 @@ func (flow *AuthFlow) FinalizeAuthCode(code string) (*OAuth2AccessToken, error) 
 }
 
 // InitResourceOwner returns an access token for resource owner (user or contact)
-func (flow *AuthFlow) InitResourceOwner() (*OAuth2AccessToken, error) {
+func (flow *AuthFlow) InitResourceOwner(ctx context.Context) (*OAuth2AccessToken, error) {
 	body := ResourceOwnerRequest{
 		GrantType:    "password",
 		ClientID:     flow.clientID,
@@ -174,7 +175,7 @@ func (flow *AuthFlow) InitResourceOwner() (*OAuth2AccessToken, error) {
 		Username:     flow.username,
 		Password:     flow.password,
 	}
-	c := NewClient(flow.url, nil)
+	c := NewClient(flow.url, nil, ctx)
 	res, err := c.Post(
 		"auth/"+flow.ownerType+"/access_token",
 		WithJsonBody(body),
@@ -190,14 +191,14 @@ func (flow *AuthFlow) InitResourceOwner() (*OAuth2AccessToken, error) {
 }
 
 // InitClientCredentials returns an access token using the client credentials
-func (flow *AuthFlow) InitClientCredentials() (*OAuth2AccessToken, error) {
+func (flow *AuthFlow) InitClientCredentials(ctx context.Context) (*OAuth2AccessToken, error) {
 	body := ClientCredentialsRequest{
 		GrantType:    "client_credentials",
 		ClientID:     flow.clientID,
 		ClientSecret: flow.clientSecret,
 		Scope:        flow.scope,
 	}
-	c := NewClient(flow.url, nil)
+	c := NewClient(flow.url, nil, ctx)
 	res, err := c.Post(
 		"auth/"+flow.ownerType+"/access_token",
 		WithJsonBody(body),
