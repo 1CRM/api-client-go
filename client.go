@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// Client is used to send requests to the API
 type Client struct {
 	auth Auth
 	url  string
@@ -24,8 +25,10 @@ type requestOptions struct {
 	ctx         context.Context
 }
 
+// RequestOption is a function used to set options of a request to the API
 type RequestOption func(*requestOptions) error
 
+// NewClient returns a new API Client
 func NewClient(url string, auth Auth, ctx context.Context) *Client {
 	if ctx == nil {
 		ctx = context.Background()
@@ -37,6 +40,7 @@ func NewClient(url string, auth Auth, ctx context.Context) *Client {
 	}
 }
 
+// WithContentType is a RequestOption that sets the Content-Type header of the HTTP request
 func WithContentType(contentType string) RequestOption {
 	return func(opts *requestOptions) error {
 		opts.contentType = contentType
@@ -44,6 +48,7 @@ func WithContentType(contentType string) RequestOption {
 	}
 }
 
+// WithBody is a RequestOption that sets the body of the HTTP request
 func WithBody(body io.Reader) RequestOption {
 	return func(opts *requestOptions) error {
 		if prev := opts.body; prev != nil && prev.(io.Closer) != nil && prev != body {
@@ -54,6 +59,7 @@ func WithBody(body io.Reader) RequestOption {
 	}
 }
 
+// WithQuery is a RequestOption that sets the query part of the HTTP request URL
 func WithQuery(query url.Values) RequestOption {
 	return func(opts *requestOptions) error {
 		opts.query = query
@@ -61,6 +67,8 @@ func WithQuery(query url.Values) RequestOption {
 	}
 }
 
+// WithQueryValue is a RequestOption that sets one parameter of the the query
+// part of the HTTP request URL
 func WithQueryValue(key, value string, append bool) RequestOption {
 	return func(opts *requestOptions) error {
 		if opts.query == nil {
@@ -75,6 +83,7 @@ func WithQueryValue(key, value string, append bool) RequestOption {
 	}
 }
 
+// WithJsonBody is a RequestOption that sets the request's body to a JSON string
 func WithJsonBody(content interface{}) RequestOption {
 	return func(opts *requestOptions) error {
 		b, err := json.Marshal(content)
@@ -89,6 +98,7 @@ func WithJsonBody(content interface{}) RequestOption {
 	}
 }
 
+// WitchContext is a RequestOption that sets the request's context
 func WitchContext(ctx context.Context) RequestOption {
 	return func(opts *requestOptions) error {
 		opts.ctx = ctx
@@ -96,6 +106,7 @@ func WitchContext(ctx context.Context) RequestOption {
 	}
 }
 
+// Request sends an HTTP request with arbitrary HTTP method
 func (c *Client) Request(method string, endpoint string, options ...RequestOption) (*Response, error) {
 	opts := requestOptions{
 		contentType: "application/json",
@@ -139,18 +150,22 @@ func (c *Client) Request(method string, endpoint string, options ...RequestOptio
 	return &Response{HttpResponse: res}, nil
 }
 
+// Get is convenience wrapper around Request() to send a GET request
 func (c *Client) Get(endpoint string, options ...RequestOption) (*Response, error) {
 	return c.Request("GET", endpoint, options...)
 }
 
+// Post is convenience wrapper around Request() to send a POST request
 func (c *Client) Post(endpoint string, options ...RequestOption) (*Response, error) {
 	return c.Request("POST", endpoint, options...)
 }
 
+// Patch is convenience wrapper around Request() to send a Patch request
 func (c *Client) Patch(endpoint string, options ...RequestOption) (*Response, error) {
 	return c.Request("PATCH", endpoint, options...)
 }
 
+// Put is convenience wrapper around Request() to send a PUT request
 func (c *Client) Put(endpoint string, options ...RequestOption) (*Response, error) {
 	return c.Request("PUT", endpoint, options...)
 }

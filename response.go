@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// Response is a response returned from requests to the API
 type Response struct {
 	HttpResponse *http.Response
 }
@@ -20,6 +21,7 @@ func (res *Response) String() (string, error) {
 	return string(b), nil
 }
 
+// ParseJSON parses response body into supplied argument
 func (res *Response) ParseJSON(out interface{}) error {
 	body := res.HttpResponse.Body
 	defer body.Close()
