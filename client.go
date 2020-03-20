@@ -19,10 +19,10 @@ type Client struct {
 }
 
 type requestOptions struct {
-	body        io.Reader
-	query       url.Values
-	contentType string
-	ctx         context.Context
+	body    io.Reader
+	query   url.Values
+	headers http.Header
+	ctx     context.Context
 }
 
 // RequestOption is a function used to set options of a request to the API
@@ -40,12 +40,17 @@ func NewClient(ctx context.Context, url string, auth Auth) *Client {
 	}
 }
 
-// WithContentType is a RequestOption that sets the Content-Type header of the HTTP request
-func WithContentType(contentType string) RequestOption {
+// WithHeader is a RequestOption that sets a  header of the HTTP request
+func WithHeader(name, value string) RequestOption {
 	return func(opts *requestOptions) error {
-		opts.contentType = contentType
+		opts.headers.Set(name, value)
 		return nil
 	}
+}
+
+// WithContentType is a RequestOption that sets the Content-Type header of the HTTP request
+func WithContentType(contentType string) RequestOption {
+	return WithHeader("Content-Type", contentType)
 }
 
 // WithBody is a RequestOption that sets the body of the HTTP request
@@ -108,9 +113,11 @@ func WitchContext(ctx context.Context) RequestOption {
 
 // Request sends an HTTP request with arbitrary HTTP method
 func (c *Client) Request(method string, endpoint string, options ...RequestOption) (*Response, error) {
+	headers := make(http.Header)
+	headers.Set("Content-Type", "application/json")
 	opts := requestOptions{
-		contentType: "application/json",
-		ctx:         c.ctx,
+		headers: headers,
+		ctx:     c.ctx,
 	}
 	for _, opt := range options {
 		if err := opt(&opts); err != nil {
@@ -128,7 +135,7 @@ func (c *Client) Request(method string, endpoint string, options ...RequestOptio
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", opts.contentType)
+	req.Header = opts.headers
 	if c.auth != nil {
 		err = c.auth.ApplyRequestOptions(req)
 		if err != nil {
