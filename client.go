@@ -177,7 +177,7 @@ func (c *Client) Put(endpoint string, options ...RequestOption) (*Response, erro
 	return c.Request("PUT", endpoint, options...)
 }
 
-// Delete is convenience wrapper around Request() to send a PUT request
+// Delete is convenience wrapper around Request() to send a DELETE request
 func (c *Client) Delete(endpoint string, options ...RequestOption) (*Response, error) {
 	return c.Request("DELETE", endpoint, options...)
 }
